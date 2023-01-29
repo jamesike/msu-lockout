@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MSU Lockout</title>
+  <link rel="icon" type="image/x-icon" href="./imgs/favicon.ico">
+</head>
+<body>
+
+<div class="wrapper">
+    <center>
+        <div style="display: flex; justify-content: center; align-items: center;width: 17.5%; ">
+            <img src="./imgs/msu.png" alt="image1" style="width: 50%; margin-right: 35px;">
+            <img src="./imgs/sh.png" alt="image2" style="width: 50%;">
+        </div>
+    </center>
+
+    <h1>MSU Lockout</h1>
+
+    <ul>
+      <li>MSU Lockout is designed to disable any Michigan State account (student, professor, or admin)</li>
+      <li>The attack requires no password, with only the email address needed</li>
+      <li>The only way for a victim to recover the account is to call the MSU IT desk or wait the lockout time.</li>
+      <li style="font-size: 0.6em;">*Only use on personally owned accounts</li>
+    </ul>
+
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <center>
+        <div class="upload-wrapper" style="width: 60%;color: white;">
+            <div class="form-group" style="max-width: 800px;">
+                <input class="form-field" type="email" placeholder="Email" id="emailInput" style="background-color: #18453B;border-color: transparent;color: white;">
+                <span style="background-color: #18453B; border-color: #18453B;color: white;">@msu.edu</span>
+
+            </div>
+            <button class="sendAttack" id="sendAttackButton" >Send Attack</button>
+            
+            <div id="sendingAttackDiv" style="display: none;">
+                <h3 id="statusAttackLabel">Sending attack...</h3>
+                <div id="statusSpinner" class="lds-ripple"><div></div><div></div></div>
+            </div>
+         </div>
+    </center>
+
+     <style>
+        ul {
+            list-style-type: none; /* remove bullet points */
+            margin: 0; /* remove default margin */
+            padding: 0; /* remove default padding */
+        }
+    
+        li {
+            font-size: 1.2em; /* increase font size */
+            line-height: 1.5; /* increase line height */
+            margin-bottom: 10px; /* add margin to bottom of each list item */
+        }
+     </style>
+
+     <script src="./index.js"></script>
+  </div>
