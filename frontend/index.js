@@ -1,6 +1,6 @@
 // index.js
 // used to control js for msu-lockout
-const API_URL = "http://127.0.0.1:3000/sendAttack"
+const API_URL = "https://api.msulock.com/sendAttack"
 
 // send_attack - used to check UI form, and send attack to msu lockout servers
 function send_attack() {
@@ -26,8 +26,7 @@ function send_attack() {
             //parse response and update that attack was sent
             if (data["status"] == "success") {
                 //update UI
-                document.getElementById("statusAttackLabel").value = "Attack was pushed in queue, please allow up to 5 - 10 minutes for account disability."
-                document.getElementById("statusSpinner").style.display = "none"
+                document.getElementById("statusAttackLabel").textContent = "Attack was pushed in queue, please allow up to 5 - 10 minutes for account disability."
             }
         })
         .catch(error => {

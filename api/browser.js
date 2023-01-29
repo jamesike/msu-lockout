@@ -18,7 +18,7 @@ function createCluster(i, addToken) {
             timeout:GEN_TIME_LIMIT, 
             puppeteerOptions: {
                 headless:true,
-                executablePath:"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+                args: ['--no-sandbox', '--proxy-server=p.webshare.io:9999'],
             },
           });
 
